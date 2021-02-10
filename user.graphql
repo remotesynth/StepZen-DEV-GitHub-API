@@ -1,0 +1,24 @@
+interface User {
+  id: ID!
+  login: String!
+  name: String!
+  company: String
+  blog: String
+  location: String
+  email: String
+  bio: String
+  twitter_username: String
+  avatar_url: String
+  repos: [Repo]
+  @materializer(
+      query: "reposByUsername"
+      arguments: [{ name: "username", field: "login" }]
+  )
+}
+type UserFromRest implements User {}
+type Query {
+  userByUsername(username: String!): User
+  userByUsernameFromRest(username: String!): UserFromRest
+    @supplies(query: "userByUsername")
+    @rest(endpoint: "https://api.github.com/users/$username", configuration: "github_api")
+}

@@ -1,0 +1,16 @@
+interface Repo {
+  id: ID!
+  name: String!
+  html_url: String!
+  description: String
+  stargazers_count: Int
+  created_at: Date
+  updated_at: Date
+}
+type RepoFromRest implements Repo {}
+type Query {
+  reposByUsername(username: String!): [Repo]
+  reposByUsernameFromRest(username: String!): [RepoFromRest]
+    @supplies(query: "reposByUsername")
+    @rest(endpoint: "https://api.github.com/users/$username/repos?sort=updated&type=owner&per_page=10", configuration: "github_api")
+}
