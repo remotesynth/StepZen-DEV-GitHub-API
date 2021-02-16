@@ -11,14 +11,18 @@ interface User {
   avatar_url: String
   repos: [Repo]
   @materializer(
-      query: "reposByUsername"
-      arguments: [{ name: "username", field: "login" }]
+      query: "reposByLogin"
+      arguments: [{ name: "login", field: "login" }]
   )
 }
 type UserFromRest implements User {}
 type Query {
-  userByUsername(username: String!): User
-  userByUsernameFromRest(username: String!): UserFromRest
-    @supplies(query: "userByUsername")
-    @rest(endpoint: "https://api.github.com/users/$username", configuration: "github_api")
+  user: User
+  userFromRest: UserFromRest
+    @supplies(query: "user")
+    @rest(endpoint: "https://api.github.com/user", configuration: "github_api")
+  userByLogin(login: String!): User
+  userByLoginFromRest(login: String!): UserFromRest
+    @supplies(query: "userByLogin")
+    @rest(endpoint: "https://api.github.com/users/$login", configuration: "github_api")
 }
